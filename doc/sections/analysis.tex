@@ -1,0 +1,56 @@
+\documentclass[../main.tex]{subfiles}
+\usepackage{amssymb}
+\usepackage{amsmath,amsthm} 
+\usepackage{amsfonts} 
+\usepackage{graphicx} 
+
+\graphicspath{{\subfix{../pictures/}}}
+\begin{document}
+
+\section{Analýza úlohy}
+Dle požadavků je nejdříve vhodné zkontrolovat, jestli byly předány argumenty a popřípadě zkontrolovat, jestli jsou validní a následně zkontrolovat správnost vstupu.
+\vspace{0.5em}
+
+Prvním argumentem je funkce, tedy je potřeba udělat syntaktickou analý-zu. Jedním ze způsobu realizace je analýza rekurzivním sestupem, já jsem se rozhodl vymyslet si vlastní postup. Můj postup při řešení problému spočívá v tom, že při každém znaku určím, jestli na dané pozici může být tento znak a pokud se jedná o znak, za kterým může následovat další znak, který k~němu patří tak čtu celou sadu znaků dokud splňují podmínku a zkontroluji správnost celku. Např. když se jedná o vícemístné číslo tak přečtu celé číslo a~zjistím, jestli je správně zapsané. Nevýhodou mého řešení je, že je zdlouhavé, ovšem přijde mi jednodušší na pochopení než rekurzivní přístup. Co se časové složitosti týče, tak jsou srovnatelné.
+\vspace{0.5em}
+
+Dalším problémem je druhý argument, tedy soubor do kterého se má uložit výsledek programu.Jeho kontrolu je potřeba provést tak, že se zkontroluje, jestli se jedná o správný typ souboru a při vytváření zkontrolovat, jestli se otevření podařilo.
+\vspace{0.5em}
+
+Poslední argument je nepovinný, je tedy potřeba zjistit, jestli byl předán. Pokud předán nebyl, musí se použít pro definiční obor i obor hodnot limity od $-10$ do 10. Pokud předán byl, tak se musí zkontrolovat jestli je správný a~uložit ho. To lze udělat kontrolou buď celého vstupu a nebo ho rozdělit a~kontrolovat po částech. Rozhodl jsem se ho kontrolovat po částech, protože je třeba limity rozdělit v obou případech a tímto způsobem bude implementace kontrolující funkce jednodušší. Nevýhoda je ovšem ta, že když bude poslední hranice nesprávná, tak se kontroly a ukládání prováděly zbytečně.
+\vspace{0.5em}
+
+Po načtení argumentů je potřeba začít zpracovávat funkci. Jelikož je třeba převést funkci na reverzní polskou notaci, tak je vhodné funkci tokenizovat na funkce, konstanty a proměnné a ostatní. Funkci \textbf{strtok} nelze použít, protože potřebuje oddělovač. Je tedy potřeba funkce, která funkci tokenizuje. pro jednoduuší práci by bylo vhodné každý token označit, jestli jeho hodnota je funkce, konstanta nebo něco jiného. tokenizační funkce může fungovat na podobném principu jako validace funkce, tedy rekurzivním sestupem a~nebo mým postupem řešení. Rozhodl jsem se pro můj postup, protože je již naimplementovaný a je potřeba ho pouze trochu upravit. Jelikož je funkce již validována, tak jí stači pouze převést na tokeny. výhodou mého přístupuje, že nebudu muset zjišťovat co token obsahuje a bude pouze stačit přečíst označení tokenu a podle něj určit co se s tokenem má stát.
+\vspace{0.5em}
+
+pro převod do reverzní polské notace jsem použil algoritmus shunting yard. Funkci je vhodné převést kvůli tomu, aby bylo její vyhodnocování jednodušší a to díky její vlastnosti, že operátory jsou seřazeny podle jejich pořadí vyhodnocování. také lze přímo do PostScriptu zapsat funkci v reverzní polské notaci a obstarávat vykreslení přímo v souboru. Kromě shunting yard by šel použít i abstraktní syntaktický strom, ovšem ten je značně složitější na implementaci. Na druhou stranu je ale snadno rozšiřitelný. Ještě by šel požít přístup pomocí 2 zásobníků, ovšem ten je neintuitivní a paměťově náročnější než shunting yard.
+\vspace{0.5em}
+
+Posledním problémem je vytvoření PostScript souboru. V něm potřebuji vykreslit funkci s osami x a y a číselnými řadami v rozsahu limit. Aby měl graf rozumnou velikost, tak jsem se rozhodl, pro poměr stran 2:1 a šířkou grafu na šířku papíru A4. abych neutralizoval možnost kreslení mimo plátno, tak jsem se rozhodl udělat odsazení od krajů. Pozici os jsem se rozhodl udělat závislou na zobrazovaných intervalech definičního oboru a oboru hodnot, tedy pozice os není pevně stanovena. pro vykreslení funkce jsem existuje několik způsobů. prvním způsobem je zapsat do souboru funkci v reverzní polské notaci a~nechat jí vytvořit PostScriptem. Tento způsob má ale velkou nevýhodu v tom, že PostScript nepodporuje všechny požadované matematické funkce a tedy je nutné nepodporované funkce vyjádřit jiným způsobem. Například hyperbolický sínus by musel být přepsán jako: 
+
+\begin{equation} 
+\label{eq:1}
+\sinh(x) =\frac{e^x - e^{-x}}{2}
+\end{equation}
+
+Dalším problémem tohoto přístupu jsou mocniny, protože $x^2$ je v reverzní polské notaci \textbf{"x 2 ˆ"} a PostScript očekává \textbf{"2 x ˆ"}. Z těchto důvodů jsem se rozhodl pro způsob vyčíslování funkce a zapisování čar do souboru manuálně. Tam je ovšem problém s nespojitými funkcemi a je nutné si stanovit začátek nové čáry, když dojde k bodu nespojitosti. Tento způsob také vytváří násobně větší soubory kvůli tomu, že všechno je zapsáno v souboru a není to generováno PostScriptem. Rozhodl jsem se pro něj kvůli jednoduchosti implementace, protože jeho nedostatky nejsou příliš závažné a pro řešení této úlohy je postačující.
+\newpage
+\begin{figure}[h!]\label{ref_images}
+    \begin{minipage}[t]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/tan_minus_ln.png}
+        \caption{Ukázka výstupu programu pro funkci $tan(x) - ln(x)$}
+        \label{ref_tan}
+    \end{minipage}
+    
+    \vspace{1em}
+    
+    \hfill
+    \begin{minipage}[t]{1\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/sin_x_2_cos.png}
+        \caption{Ukázka výstupu programu pro funkci $sin(x^2) \cdot cos(x)$}
+        \label{ref_sin}
+    \end{minipage}
+\end{figure}
+\end{document}

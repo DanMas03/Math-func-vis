@@ -1,0 +1,135 @@
+\documentclass[../main.tex]{subfiles}
+\usepackage{amssymb}
+\usepackage{amsmath,amsthm} 
+\usepackage{amsfonts} 
+\usepackage{graphicx} 
+\usepackage{listings}
+\graphicspath{{\subfix{../pictures/}}}
+\begin{document}
+\section{Popis implementace}
+Program jsem implementoval dle analýzy, tedy nejdřív proběhne kontrola parametrů příkazové řádky jestli byly předány povinné parametry, pokud ne, tak program skončí chybovou hláškou dle zadaní.  Následně se provede kontrola předání třetího nepovinného parametru. Pokud předán byl, tak se uloží a program pokračuje, pokud ne tak se uloží nula. Pak probíhá validace funkce. Pokud funkce není validní, tak program skončí chybovým kódem dle zadaní. Dále se provede kontrola výstupního souboru, jestli je ve správném formátu a pokud není, tak program skončí chybovou hláškou. Nyní se provede Dělení limit podle dříve uložené hodnoty a vyhodnotí se. Pokud předán nebyl, použijí se limity "-10:10:-10:10", pokud ano, tak se zkontrolují a uloží.
+\vspace{0.5em}
+
+Po kontrole vstupů se alokuje paměť pro tokeny v infixové a postfixové notaci a funkce se rozdělí na jednotlivé tokeny představující funkce, operátory a jiné povolené symboly. Jelikož byla funkce již dříve kontrolována, tak se neprovádí kontrola teď. Následně se funkce převede do postfixové notace, kvůli jednodušímu vyčíslování při zápisu do souboru. Po převodu do postfixu se uvolní paměť použitá na infixovou notaci a začne se generovat soubor. Po
+{
+\spaceskip  0.7em  \relax
+úspěšném vytvoření souboru se program ukončí. Při neuspěch skončí} 
+\newline s chybovým kódem 5. 
+\subsection{Použité struktury}
+\begin{lstlisting}
+typedef enum
+{
+    NUM,  /*number*/
+    VAR,  /*variable x*/
+    OP,   /*operator (+,-,* etc.)*/
+    FUNC, /*function (sin,cos etc.)*/
+    LBR,  /*left bracket '(' */
+    RBR,  /*right bracket ')'*/
+    END   /*end of token*/
+} token_type;
+\end{lstlisting}
+
+Tato struktura slouží k označení tokenu typem, tedy pokud se rozhodne že token je číslo, tak bude mít typ \textbf{NUM}. Tento přístup usnadní implementaci algoritmu shunting yard.
+\newpage
+\begin{lstlisting}
+typedef struct
+{
+    token_type type;         /*token type*/
+    char value[MAX_TOK_LEN]; /*token*/
+} token;
+\end{lstlisting}
+
+Tato struktura představuje token, tedy matematickou funkci, \ operátor \ a ostatní možné řetězce. Atribut \textbf{type} představuje typ tokenu popsaný výše a atribut value je hodnota tokenu typu pole symbolů.
+\begin{lstlisting}
+typedef struct
+{
+    double x_start, x_end, y_start, y_end;
+} graph_limits;
+\end{lstlisting}
+
+Struktura \textbf{graph\_limits} představuje rozsah hodnot na výsledném grafu a využívá se při výpočtech potřebných u vykreslení.
+
+\subsection{Konstanty}
+\begin{lstlisting}
+#ifndef CONSTS_H
+#define CONSTS_H
+
+#define MAX_TOK_LEN 64
+#define NUM_OF_SAMPLES 8000
+#define DEFAULT_RANGE_X 20
+#define DEFAULT_RANGE_Y 10
+#define MARGIN 50
+#define DISCONTUITY_THRESHOLD_SCALE 0.75
+#endif
+\end{lstlisting}
+
+Všechny konstanty jsou uložené v jednom hlavičkovém souboru \textbf{consts.h} kvůli přehlednosti kódu.
+\vspace{0.5em}
+
+Konstanta \textbf{MAX\_TOK\_LEN} představuje maximální délku tokenu. Velikost je předimenzovaná hlavně kvůli číslům, které můžou mít velkou délku. Pokud velikost čísla přeteče tak to program zjistí a vykreslí prázdný graf.
+\vspace{0.5em}
+
+\textbf{DEFAULT\_RANGE\_X} Představuje počet čísel na ose X.
+\vspace{0.5em}
+
+\textbf{DEFAULT\_RANGE\_Y} představuje počet čísel na ose Y.
+\vspace{0.5em}
+
+Konstanta \textbf{MARGIN} představuje odsazení grafu od kraje stránky v bodech.
+\vspace{0.5em}
+
+Konstanta \textbf{DISCONTUITY\_THRESHOLD\_SCALE} slouží k vynáso-bení rozsahu Y a pokud hodnota funkce skočí o tuto hodnotu, tak se určí, že je tam bod nespojitosti.
+
+\subsection{Validace vstupů}
+Veškerou validaci v programu obstarává modul \textbf{validator.h}.
+\vspace{0.5em}
+
+Kontrola funkce spočívá v nastavených pravidlech, to znamená že každý znak se kontroluje jestli je číslo, písmeno, operátor nebo závorka. Každé z~pravidel má svá podpravidla, například že před otevírací závorkou může být nic, operátor nebo funkce a pokud je tam něco jiného, výraz se vyhodnotí jako nesprávný. Takováto pravidla jsou nadefinovaná pro každý možný vstup. Čísla a funkce jsou řešena načtením do pomocného pole a jsou validována vcelku. čísla mají složitá pravidla, protože mohou obsahovat i jiné znaky než číslice.
+\vspace{0.5em}
+
+Validace výstupního souboru probíha pouze kontrolou koncovky souboru, protože PostScript je podporován na všech platformách.
+\vspace{0.5em}
+
+\hfill Kontrola limit probíhá trochu jinak. Nejdřív jsou rozděleny na čísla \newline a každé číslo je kontrolováno podle stejných pravidel jako číslo ve funkci.
+
+\subsection{Dělení vstupních dat}
+veškerý převod na tokeny obstarává modul \textbf{parser.h}
+\vspace{0.5em}
+
+tokenizace funkce probíha obdobně jako její kontrola s tím rozdílem, že se nekontorluje syntaktická správnost a vytvořené tokeny se ukládají do pole vytvořeného při startu programu.
+\vspace{0.5em}
+
+dělení limit využívá funkci \textbf{strtok} a děli se podle dělícího znaku, každý vytvořený token se poté validuje.
+
+\subsection{Konverze do postfixové notace}
+Konverzi do postfixové notace obstarává \textbf{convertor.h}, který využívá \textbf{stack.h}
+\vspace{0.5em}
+
+Konverze probíhá pomocí shunting-yard algoritmu. Ten pracuje tak že čte tokeny od začátku do konce. Pokaždé co přijde číslo nebo proměnná, tak je položena na vrchol zásobníku a u operátorů jako jsou funkce a matematické operace se vyndají ze zásobníku všechny operátory vloží se aktuální operátor a pak všechny operátory, kteří byli vyjmuti ze zásobníku.
+
+\subsection{Vytvoření souboru}
+\hfill Pro vytváření souborů typu PostScript je určen modul \\\textbf{postscript\_creator.h} a pro vyčíslování funkce se používá modul \textbf{evaluator.h}
+\vspace{0.5em}
+
+Při vytváření souboru napřed vytvořím soubor, nebo přepíšu soubor se stejným názvem, který již existuje a napíšu hlavu souboru.
+\begin{lstlisting}
+    double graph_width = 595;
+    double graph_height = (graph_width+2*MARGIN)/2;// this is to make the graph 2:1 after subtracting the margins
+    double x_interval = (limits.x_end - limits.x_start) / DEFAULT_RANGE_X;
+    double y_interval = (limits.y_end - limits.y_start) / DEFAULT_RANGE_Y;
+
+    // Write PostScript header
+    fprintf(file, "%%!PS-Adobe-3.0\n");
+    fprintf(file, "%%%%BoundingBox: 0 0 %lf %lf\n", graph_width, graph_height);
+    fprintf(file, "%%%%Title: \n", function);
+    fprintf(file, "%%%%Creator: Daniel Masek\n");
+\end{lstlisting}
+\vspace{0.5em}
+
+
+Poté vytvořím plátno, tedy ohraničení a kříž. pozice kříže není pevná, záleží na definičním oboru. Dále se vykreslí název grafu, což je funkce v~infixovém tvaru.
+\vspace{0.5em}
+
+Nakonec se vykreslí samotná funkce, která se vyčísluje, zkontroluje se, jestli je výsledek číslo a jestli je v limitách a jestli nedošlo ke skoku, což znamená bod nespojitosti.Pokud se jedná o bod nespojitosti, tak se přeruší čára a začne nová v posledním bodě. Pak se překonvertují souřadnice, a~vykreslí se čára po čáře Dokud se nedojde na konec definičního oboru a zavře se soubor. Poté se program ukončí s kódem 0.
+
+\end{document}

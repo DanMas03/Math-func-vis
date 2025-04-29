@@ -1,0 +1,32 @@
+\documentclass[../main.tex]{subfiles}
+\usepackage{amssymb}
+\usepackage{amsmath,amsthm} 
+\usepackage{amsfonts} 
+\usepackage{graphicx} 
+\graphicspath{{\subfix{../pictures/}}}
+\begin{document}
+\section{Uživatelská příručka}
+Pro spuštění programu je potřeba mít nainstalovanou sadu kompilátorů gcc a to jak pro Linux, tak i pro Windows. Na Linuxu je třeba pro zkompilování zavolat příkaz \textbf{"make"} nebo \textbf{"make \textless filename\textgreater"}, kde \textless filename\textgreater je název makefile k použití. Pro Windows je to obdobné s rozdílem že místo příkazu \textbf{"make"} se použije \textbf{"mingw32-make"}.
+\vspace{0.5em}
+
+Nyní, když je program zkompilovaný, tak je možn ho spustit. Na Windows je potřeba otevřít konzoli nebo PowerShell a dostat se do adresáře se zkompilovaným souborem. Pro zpuštění v konzoli se zadá příkaz: \newline
+
+\textbf{C:$\backslash\textgreater$ graph.exe $\textless$ function $\textgreater \textless$ filename$\textgreater[\textless$ limits$\textgreater]$}
+\vspace{1em}
+
+Kde \textless function\textgreater \ je matematická funkce, \textless filename\textgreater je název souboru (například test.ps) a \textless limits\textgreater je nepovinný parametr limit. (ro PowerShell to je obdobné akorát je třeba na začátku přidat \textbf{"./"}.
+Pro Linux je spouštění souboru stejné jako u PowerShellu, tedy:
+\vspace{1em}
+
+\textbf{C:$\backslash\textgreater$ ./graph.exe $\textless$ function $\textgreater \textless$ filename$\textgreater[\textless$ limits$\textgreater]$}
+\vspace{1em}
+
+Po zadání spouštěcího příkazu se program rozběhne a pokud nevypíše chybové hlášení a skončil s kódem 0, tak vše proběhlo v pořádku a soubor byl vytvořen. Pokud ale byla v zadaných parametrech chyba, tak program vypíše co je za problém a skončí s chybovým kódem dle zadání. Výsledky je možné vidět na stránce \pageref{ref_images}
+\vspace{0.5em}
+
+Zde je ukázka správně zapsaného Spouštěcího příkazu:
+\vspace{1em}
+
+\textbf{C:$\backslash\textgreater$ ./graph.exe  sin(xˆ2)*cos(x) test.ps 6.28:12.56:-1:1}
+\vspace{1em}
+\end{document}

@@ -1,0 +1,104 @@
+\documentclass[../main.tex]{subfiles}
+\usepackage{amssymb}
+\graphicspath{{\subfix{../pic/}}}
+\begin{document}
+
+\section{Zadání}
+
+Naprogramujte v ANSI C přenositelnou konzolovou aplikaci, která jako\newline
+\hfill vstup načte z parametru na příkazové řádce matematickou funkci ve tvaru\newline
+$y = f(x); \, x, y \in \mathbb{R}$, provede její analýzu a vytvoří soubor ve formátu PostScript  s grafem této funkce na zvoleném definičním oboru.
+\vspace{0.5em}
+
+Program se bude spouštět příkazem \textbf{graph.exe ⟨func⟩ ⟨out-file⟩ [⟨limits⟩]}.
+Symbol ⟨func⟩ zastupuje zápis matematické funkce jedné reálné nezá-vislé proměnné (funkce ve více dimenzích program řešit nebude, nalezne-li během analýzy zápisu funkce více nezávisle proměnných než jednu, vypíše srozumitelné chybové hlášení a skončí). Závisle proměnná (zde y) je implicitní, a proto se levá strana rovnosti v zápisu nebude uvádět. Symbol ⟨out-file⟩ zastupuje jméno výstupního postscriptového souboru.
+
+\vspace{0.5em}
+Výsledkem práce programu bude soubor ve formátu PostScript, který bude zobrazovat graf zadané matematické funkce s vyznačenými souřadnými osami a (aspoň) význačnými hodnotami definičního oboru a oboru hodnot funkce.
+
+\vspace{0.5em}
+Pokud nebudou na příkazové řádce uvedeny alespoň dva argumenty, vypiš-te chybové hlášení a stručný návod k použití programu v angličtině podle běžných zvyklostí.
+
+\subsection{Specifikace vstupu programu}
+
+Vstupem programu jsou pouze parametry na příkazové řádce: Prvním (a nejdůležitějším) parametrem je matematická funkce, kterou má program zpracovat. S ohledem na to, že může její zápis
+obsahovat mezery, napište program tak, aby akceptoval jak zápis funkce obklopený uvozovkami,
+tak bez nich, tj. aby bylo možné program spouštět jak zadáním příkazu \textbf{graph.exe x+xˆ2}, tak
+příkazem \textbf{graph.exe "x + xˆ2"}. Také použití mezer v zápisu \\
+\makebox[\linewidth][s]{funkce musí být libovolné.  Je také možné, že uživatel vašeho programu} \\ z nepořádnosti někde v zápisu mezery použije a někde zase ne, třeba takto:
+\textbf{"sin (x ˆ2)*cos(x / 2.0)"} – tato varianta zápisu je také akceptovatelná.
+
+\newpage
+
+\subsection{Způsob zápisu funkcí}
+V zápisu matematické funkce, jejíž graf bude program generovat, se mohou vyskytnout tyto symboly: konstanty, proměnná, aritmetické operátory, funkce, závorky. Jiné symboly zápis obsahovat nesmí – pokud se v zápisu objeví, měl by program reagovat srozumitelným chybovým hlášením.
+\vspace{0.5em}
+
+Konstanty ( mohou být ve všech akceptovatelných formátech zápisu celého či reálného čísla
+v jazyce C, tj. např. i \textbf{.5E-02} či \textbf{1E0}. S ohledem na to, že má program řešit jen 2D grafy, jediná
+možná nezávislá proměnná, která se může v zápisu funkce vyskytovat je x.
+\vspace{0.5em}
+
+následující tabulka ukazuje veškeré povolené matematické operace:
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Operace} & \textbf{Zápis operátoru} & \textbf{Příklad} \\ \hline
+        unární mínus & $-$ & $-x$ \\ \hline
+        sčítání & $+$ & $x + 2$ \\ \hline
+        odčítání & $-$ & $x - 2$ \\ \hline
+        násobení & $*$ & $2 * x$ \\ \hline
+        dělení & $/$ & $x / 2$ \\ \hline
+        umocnění & ˆ & xˆ2 \\ \hline
+    \end{tabular}
+    \caption{Povolené matematické operace}
+\end{table}
+
+Jiné operátory nejsou povolené. Priorita operátorů je dána matematickými pravidly, případně
+upravena závorkami ( a ) – jiné druhy závorek se v zápisu funkce nesmí vyskytovat.
+
+\subsection{Specifikace rozsahu zobrazení}
+Třetí – \textbf{nepovinný} – parametr [⟨limits⟩] na příkazové řádce slouží k~předá-ní informací o rozsazích zobrazení grafu analyzované funkce, tedy o horní a~dolní mezi definičního oboru a oboru
+hodnot funkce. Má tvar:
+\vspace{0.5em}
+
+{\centering ⟨xdol⟩:⟨xhor⟩:⟨ydol⟩:⟨yhor⟩ \par}
+
+\vspace{0.5em}
+
+Například příklad pro spuštění se zadanými rozsahy může vypadat takto: \textbf{graph.exe "sin(xˆ2)*cos(x)"\:sin2cos.ps 6.28:12.56:-1:1}. Není-li rozsah uveden (protože se jedná o nepovinný parametr), použijte implicitní nastavení,
+které nechť je pro definiční obor i obor hodnot ⟨$-10$; $10$⟩.
+
+\newpage
+\subsection{Matematické funkce v zápisu}
+Váš program by měl akceptovat v zápisu zobrazované funkce některé běžně používané matematické funkce. Funkce uvedené v následujícím výčtu program musí akceptovat, jinak nebude uznán
+za řádně dokončený: absolutní hodnota \textbf{abs}; funkce eˆx \textbf{exp}, přirozený logaritmus \textbf{ln}, dekadický
+logaritmus \textbf{log}; goniometrické funkce \textbf{sin}, \textbf{cos}, \textbf{tan}; cyklometrické funkce \textbf{asin}, \textbf{acos}, \textbf{atan}; hyperbolometrické funkce \textbf{sinh}, \textbf{cosh}, \textbf{tanh}.
+\subsection{Specifikace výstupu programu}
+Výstup programu bude směrován na konzoli pouze v případě chyby v~zadá-ní parametrů. Pokud
+budou všechny parametry akceptovatelné a funkce k~zobrazení syntakticky správně zapsaná, nemusí program vypisovat na konzoli nic. Pokud program neobdrží požadovaný počet parametrů na
+příkazovém řádku či pokud je funkce špatně zapsána, měl by vypsat srozumitelné chybové hlášení
+v angličtině a skončit nenulovým návratovým kódem.
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.2} % Nastaví hustotu řádků
+    \setlength{\tabcolsep}{4pt} % Zmenší horizontální mezery mezi sloupci
+    \resizebox{1\textwidth}{!}{ % Zmenší celou tabulku na 90 % šířky stránky
+    \begin{tabular}{|p{8cm}|c|}
+        \hline
+        \textbf{Popis chybového stavu} & \textbf{Návratová hodnota funkce int main()} \\ \hline
+        Bez chyby/korektní ukončení činnosti programu. & 0 \\ \hline
+        Nebyly předány správné parametry na příkazové řádce při spuštění programu. & 1 \\ \hline
+        Řetězec předaný programu jako první parametr není akceptovatelným zápisem matematické funkce. & 2 \\ \hline
+        Řetězec předaný programu jako druhý parametr nemůže být v hostitelském operačním systému názvem souboru nebo takový soubor nelze vytvořit či do něj ukládat informace. & 3 \\ \hline
+        Uvedený nepovinný třetí parametr nelze dekódovat jako rozsahy zobrazení. & 4 \\ \hline
+    \end{tabular}
+    }
+    \caption{Chybové stavy a návratové hodnoty funkce}
+\end{table}
+\vspace{0.5em}
+
+Výsledkem činnosti programu by měl být soubor ve formátu PostScript, který bude obsahovat
+vykreslený graf zadané funkce.
+\end{document}

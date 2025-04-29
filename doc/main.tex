@@ -1,0 +1,88 @@
+\documentclass[12pt]{article} % velikost písma a typ dokumentu
+\usepackage[utf8]{inputenc}  % kódování
+\usepackage[czech]{babel} % jazykový balík
+\usepackage{graphicx}  % balik nutný pro vkládání Obrázků
+\usepackage{indentfirst}  % odsazení prvního řádku v odstavci (někdy se to dělá, někdy ne - co je správně nevím)
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{gensymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{pdfpages}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{RGB}{193,152,249}
+\definecolor{backcolour}{RGB}{253,252,221}
+
+\lstdefinestyle{code}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=code}
+\graphicspath{{pictures/}}
+\usepackage{subfiles} 
+
+\begin{document}  % začátek dokumentu - na konci je end ;)
+
+\begin{figure}[h!] % vkládání plovoucího prostředí pro Obrázky parametr, vynucuje umístění here!
+\centering % zajištění centrování - pro aktuální 'figure'
+\includegraphics[width=0.5\textwidth]{pictures/FAV_cmyk.png} % vložení Obrázku - i s cestou jeho umístění !
+\hspace{1cm}  % vložení horizontální mezery
+\includegraphics[width=0.4\textwidth]{pictures/ZCU_cmyk.png} % vložení Obrázku
+\end{figure}
+
+\begin{center} % centrování textu (begin - end)
+\LARGE{Západočeská univerzita v Plzni}\\ % lokální modifikace velikosti textku (relativně k definici v documentclass)
+\LARGE{Fakulta aplikovaných věd}
+\vspace{2cm} % vložení vertikální mezery
+\end{center}
+
+\begin{center}
+    \LARGE{\textbf{Programování v jazyce C}}\\
+    \Large{\textbf{Vizualizace grafu matematické funkce}}\\
+    \vspace{0.2cm}
+    \small{Daniel Mašek}
+\end{center}
+
+\vfill{}  % vyplnění 'prázdnem' - zajistí, že zbytek bude dole na stránce 
+\noindent  % zabrání odsazení nového odsatvce
+KIV/PC \hfill Datum zpracování: \today
+
+\thispagestyle{empty}  % zakáže číslování stránky
+\newpage % zalomení stránky
+\tableofcontents
+\newpage
+\setcounter{page}{1} % nastaví počítadlo stránek
+
+\newpage
+\subfile{sections/instructions}
+\newpage
+\subfile{sections/analysis}
+\newpage
+\subfile{sections/implementation}
+\newpage
+\subfile{sections/manual}
+\newpage
+\subfile{sections/conclusion}
+
+\end{document}

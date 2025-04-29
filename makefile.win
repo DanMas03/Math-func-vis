@@ -1,0 +1,16 @@
+EXE = graph.exe
+SRC = convertor.c evaluator.c graph.c parser.c ps_creator.c stack.c validator.c
+OB = $(SRC:.c=.obj)
+OPT = -std=c99 -Wall -Wextra -pedantic -lm
+
+$(EXE): $(OB)
+	gcc $(OB) -o $(EXE) $(OPT) 
+
+%.obj: %.c
+	gcc -c $< -o $@ $(OPT)
+
+clean:
+	del /f /q $(OB) $(EXE)
+
+.PHONY: clean
+

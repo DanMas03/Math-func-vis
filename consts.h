@@ -1,0 +1,10 @@
+#ifndef CONSTS_H
+#define CONSTS_H
+
+#define MAX_TOK_LEN 64
+#define NUM_OF_SAMPLES 8000
+#define DEFAULT_RANGE_X 20
+#define DEFAULT_RANGE_Y 10
+#define MARGIN 50
+#define DISCONTUITY_THRESHOLD_SCALE 0.75
+#endif
