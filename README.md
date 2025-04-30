@@ -9,5 +9,6 @@ in [doc](https://github.com/DanMas03/graph_c/blob/main/doc) folder is Latex code
 For more information, see [doc/Dokumentace.pdf](https://github.com/DanMas03/graph_c/blob/main/doc/Dokumentace.pdf).
 
 # Example output
+![image](https://github.com/user-attachments/assets/ba80177a-7291-4a97-901a-f88deb3e2b73)
 
-![image](https://github.com/user-attachments/assets/77749d01-a65b-4d7f-836a-8af186dd4042)
+
